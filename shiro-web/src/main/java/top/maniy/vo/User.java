@@ -7,6 +7,7 @@ package top.maniy.vo;
  * @date 2018/10/6 15:39
  */
 public class User {
+
     private String username;
     private String password;
 

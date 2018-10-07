@@ -30,6 +30,12 @@ public class UserController {
         } catch (AuthenticationException e) {
             return  e.getMessage();
         }
-        return "登录成功";
+        if(subject.hasRole("admin")){
+            if (subject.isPermitted("user:select")){
+                return "权限为user:select";
+            }
+            return "有admin权限";
+        }
+        return "无admin权限";
     }
 }
