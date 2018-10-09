@@ -5,6 +5,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
+import java.util.Set;
 
 /**
  * @author liuzonghua
@@ -33,6 +34,8 @@ public class JedisUtil {
 
     }
 
+
+
     public void expire(byte[] key, int i) {
         Jedis jedis =getResource();
         try {
@@ -43,10 +46,30 @@ public class JedisUtil {
         }
     }
 
-    public void get(byte[] key) {
+    public byte[] get(byte[] key) {
         Jedis jedis =getResource();
         try {
-            jedis.get(key);
+            return jedis.get(key);
+
+        } finally {
+            jedis.close();
+        }
+    }
+
+    public void del(byte[] key) {
+        Jedis jedis =getResource();
+        try {
+             jedis.del(key);
+
+        } finally {
+            jedis.close();
+        }
+    }
+
+    public Set<byte[]> keys(String shiro_seesion_prefix) {
+        Jedis jedis =getResource();
+        try {
+            return jedis.keys((shiro_seesion_prefix+"*").getBytes());
 
         } finally {
             jedis.close();
