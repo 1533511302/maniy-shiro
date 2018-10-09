@@ -2,9 +2,13 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
     <import resource="spring-dao.xml" />
+    <import resource="spring-redis.xml" />
     <context:component-scan base-package="top.maniy"/>
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
@@ -12,13 +16,26 @@
         <property name="unauthorizedUrl" value="403.html" />
         <property name="filterChainDefinitions">
             <value>
-                <!-- 这里顺序执行 anon不要认真 authc需要认证，一般情况下 /*放在最下面-->
+                <!-- 这里顺序执行 anon不要认证 authc需要认证，一般情况下 /*放在最下面-->
                 /login.html = anon
                 /subLogin = anon
+                /testRole2=roles["admin"]
+                /testRole3=rolesOr["admin","admin1"]
+                /testPerms =perms[user:select]
+                /testPerms1 =perms["user:select","user:update"]
                 /* = authc
             </value>
         </property>
+        <property name="filters">
+            <util:map>
+                <entry key="rolesOr" value-ref="rolesOrFilter"/>
+            </util:map>
+
+
+        </property>
     </bean>
+
+    <bean class="top.maniy.filter.RolesOrFilter" id="rolesOrFilter"/>
     <!--创建SecurityManager对象 -->
     <bean class="org.apache.shiro.web.mgt.DefaultWebSecurityManager" id="securityManager">
         <property name="realm" ref="realm"/>
@@ -33,4 +50,5 @@
         <property name="hashIterations" value="1"/>
 
     </bean>
+
 </beans>

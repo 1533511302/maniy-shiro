@@ -3,6 +3,8 @@ package top.maniy.controller;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,5 +39,52 @@ public class UserController {
             return "有admin权限";
         }
         return "无admin权限";
+    }
+
+    /**
+     * 通过注解配置授权
+     * 用户角色必须具备admin权限才能访问
+     * @return
+     */
+    @RequiresRoles("admin")
+    //@RequiresPermissions("xxxx")
+    @RequestMapping(value = "/testRole",method = RequestMethod.GET)
+    @ResponseBody
+    public String TestRole(){
+        return "testRole success";
+    }
+
+    /**
+     * 通过注解配置授权
+     * 用户角色必须具备admin权限才能访问
+     * @return
+     */
+    @RequiresRoles("admin1")
+    @RequestMapping(value = "/testRole1",method = RequestMethod.GET)
+    @ResponseBody
+    public String TestRole1(){
+        return "testRole1 success";
+    }
+
+    @RequestMapping(value = "/testRole2",method = RequestMethod.GET)
+    @ResponseBody
+    public String TestRole2(){
+        return "testRole2 success";
+    }
+    @RequestMapping(value = "/testRole3",method = RequestMethod.GET)
+    @ResponseBody
+    public String TestRole3(){
+        return "testRole3 success";
+    }
+
+    @RequestMapping(value = "/testPerms",method = RequestMethod.GET)
+    @ResponseBody
+    public String TestPerms(){
+        return "testPerms success";
+    }
+    @RequestMapping(value = "/testPerms1",method = RequestMethod.GET)
+    @ResponseBody
+    public String TestPerms1(){
+        return "testPerms1 success";
     }
 }
